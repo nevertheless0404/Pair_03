@@ -1,6 +1,6 @@
 from multiprocessing import context
 from django.shortcuts import render, redirect
-from .forms import CustomUserCreationForm
+from .forms import CustomUserCreationForm, CustomUserChangeForm
 from django.contrib.auth.forms import AuthenticationForm  # 로그인
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
@@ -62,3 +62,18 @@ def detail(request, pk):
         "user_": user,
     }
     return render(request, "accounts/detail.html", context)
+
+
+def update(request, pk):
+    if request.method == "POST":
+        form = CustomUserChangeForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            return redirect("accounts:detail", request.user.pk)
+    else:
+        form = CustomUserChangeForm(instance=request.user)
+
+    context = {
+        "form": form,
+    }
+    return render(request, "accounts/update.html", context)
