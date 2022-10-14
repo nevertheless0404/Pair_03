@@ -18,8 +18,11 @@ def create(request):
         form = ReviewCreationForm(request.POST)
 
         if form.is_valid():
-            form.save()
-            return redirect("reviews:index")
+            new = form.save(commit=False)
+            new.grade = len(new.star)
+            new.save()
+
+            return redirect("reviews:detail", new.pk)
 
     else:
         form = ReviewCreationForm()
