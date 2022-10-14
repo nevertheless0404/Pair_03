@@ -4,8 +4,13 @@ from .models import Review
 
 # Create your views here.
 
+
 def index(request):
-    return render(request, "reviews/index.html")
+    reviews = Review.objects.order_by("-id")
+    context = {
+        "reviews": reviews,
+    }
+    return render(request, "reviews/index.html", context)
 
 
 def create(request):
@@ -20,7 +25,15 @@ def create(request):
         form = ReviewCreationForm()
 
     context = {
-        'form': form,
+        "form": form,
     }
 
     return render(request, "reviews/create.html", context)
+
+
+def detail(request, pk):
+    review = Review.objects.get(pk=pk)
+    context = {
+        "review": review,
+    }
+    return render(request, "reviews/detail.html", context)
