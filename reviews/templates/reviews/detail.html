@@ -1,10 +1,8 @@
-{% extends 'base.html' %}
-{% block content %}
-  <p>{{ review.title }}</p>
-  <p>제목:
-    {{ review.content }}</p>
-  <p>영화 이름:
-    {{ review.movie_name }}</p>
-  <p>평점:
-    {{ review.grade }}</p>
-{% endblock %}
+{% extends 'base.html' %} {% block content %}
+<p>제목: {{ review.title }}</p>
+<p>내용: {{ review.content }}</p>
+<p>영화 이름: {{ review.movie_name }}</p>
+<p>평점: {{ review.grade }}</p>
+<a class = 'btn btn-primary' href="{% url 'reviews:update' review.pk %}"> 수정 </a>
+<a class = 'btn btn-primary' href="{% url 'reviews:delete' review.pk %}"> 삭제 </a>
+  {% endblock %}
