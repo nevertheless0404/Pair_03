@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 {% block content %}
-<table class="table">
+<table class="table table-hover">
+  <h1 class="text-center">회원 목록</h1>
+
   <thead>
     <tr>
       <th scope="col">id</th>
@@ -9,23 +11,20 @@
     </tr>
   </thead>
   <tbody>
-    {% for user in users  %}
-    <tr>
-      <th scope="row">{{ user.id }}</th>
-      <td>
-        <a href="{% url 'accounts:detail' user.pk %}">{{ user.username }}</a></td>
-      <td>{{ user.email }}</td>
-    </tr>
+    {% for user in users %}
+      <tr onclick="goToDetail({{ user.pk }})">
+        <th scope="row">{{ user.pk }}</th>
+        <td>{{ user.username }}</td>
+        <td>{{ user.email }}</td>
+      </tr>
     {% endfor %}
   </tbody>
 </table>
-  <a href="{% url 'accounts:signup' %}" class="btn btn-primary mb-3 w-100">회원가입</a>
-  <a href="{% url 'accounts:login' %}" class="btn btn-primary mb-3 w-100">로그인</a>
 
-  {% if request.user.is_authenticated %}
-    <form action="{% url 'accounts:logout' %}" method="POST">
-      {% csrf_token %}
-      <button type="submit" class="btn btn-primary w-100">로그아웃하기</button>
-    </form>
-  {% endif %}
+<!-- JS -->
+<script>
+  function goToDetail(user_pk) {
+    location.href = "{% url 'accounts:detail' pk=0 %}".replace('0', user_pk)
+  }
+</script>
 {% endblock content %}
