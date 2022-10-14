@@ -56,6 +56,8 @@ def detail(request, pk):
 
 @login_required
 def update(request, pk):
+    review = Review.objects.get(pk=pk)
+
     # 로그인 하지 않으면 글 수정 X
     # 글 작성자를 FK로 해서 그 사람만 수정할 수 있게 하면 좋을 것 같다.
     if not request.user.is_authenticated:
@@ -63,8 +65,7 @@ def update(request, pk):
 
     if request.user.pk != review.user_id:
         return redirect(request.GET.get("next") or "reviews:index")
-
-    review = Review.objects.get(pk=pk)
+    
     if request.method == "POST":
         form = ReviewCreationForm(request.POST, instance=review)
         if form.is_valid():
@@ -80,9 +81,11 @@ def update(request, pk):
 
 
 def delete(request, pk):
-    review = Review.objects.get(pk=pk).delete()
+    review = Review.objects.get(pk=pk)
 
     if request.user.pk != review.user_id:
         return redirect(request.GET.get("next") or "reviews:index")
 
+    review.delete()
+    
     return redirect("reviews:index")
