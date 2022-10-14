@@ -11,7 +11,7 @@
 
 ## 스크린샷
 
-<video src="Assets/README.assets/pair3.mp4"></video>
+![pair3](Assets/README.assets/pair3.gif)
 
 
 
