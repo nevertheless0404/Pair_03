@@ -21,7 +21,8 @@ def signup(request):
     if request.method == "POST":
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save()
+            auth_login(request, user)
             return redirect("accounts:index")
     else:
         form = CustomUserCreationForm()
@@ -35,14 +36,14 @@ def signup(request):
 def login(request):
     # 사용자가 로그인했으면, 로그인을 할 수 없다.
     if request.user.is_authenticated:
-        return redirect('accounts:index')
+        return redirect("accounts:index")
 
     if request.method == "POST":
         form = AuthenticationForm(request, data=request.POST)
 
         if form.is_valid():
             auth_login(request, form.get_user())
-            return redirect("accounts:index")
+            return redirect(request.GET.get("next") or "accounts:index")
 
     else:
         form = AuthenticationForm()
@@ -57,8 +58,8 @@ def login(request):
 def logout(request):
     # 사용자가 로그인하지 않았으면, 로그아웃을 할 수 없다.
     if not request.user.is_authenticated:
-        return redirect('accounts:index')
-    
+        return redirect(request.GET.get("next") or "accounts:index")
+
     auth_logout(request)
 
     return redirect("accounts:index")
@@ -79,7 +80,7 @@ def update(request, pk):
     # 로그인한 유저 != 수정할 정보를 가진 유저
     # 버튼은 막아뒀지만, url로 접근할 수 없도록 함.
     if request.user.pk != user.pk:
-        return redirect(request.GET.get('next') or 'reviews:index')
+        return redirect(request.GET.get("next") or "reviews:index")
 
     if request.method == "POST":
         form = CustomUserChangeForm(request.POST, instance=request.user)
