@@ -6,7 +6,7 @@ from .models import Review
 class ReviewCreationForm(ModelForm):
     class Meta:
         model = Review
-        exclude = ("grade", )
+        exclude = ("grade",)
         labels = {
             "title": "제목",
             "content": "내용",

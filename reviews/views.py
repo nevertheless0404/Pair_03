@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from .forms import ReviewCreationForm
 from .models import Review
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -13,12 +14,18 @@ def index(request):
     return render(request, "reviews/index.html", context)
 
 
+@login_required
 def create(request):
+    # 로그인 하지 않으면 글 작성 X
+    if not request.user.is_authenticated:
+        return redirect(request.GET.get('next') or 'reviews:index')
+    
     if request.method == "POST":
         form = ReviewCreationForm(request.POST)
 
         if form.is_valid():
             new = form.save(commit=False)
+            new.user_id = request.user.pk
             new.grade = len(new.star)
             new.save()
 
@@ -42,7 +49,16 @@ def detail(request, pk):
     return render(request, "reviews/detail.html", context)
 
 
+@login_required
 def update(request, pk):
+    # 로그인 하지 않으면 글 수정 X
+    # 글 작성자를 FK로 해서 그 사람만 수정할 수 있게 하면 좋을 것 같다.
+    if not request.user.is_authenticated:
+        return redirect(request.GET.get('next') or 'reviews:index')
+
+    if request.user.pk != review.user_id:
+        return redirect(request.GET.get('next') or 'reviews:index')
+    
     review = Review.objects.get(pk=pk)
     if request.method == "POST":
         form = ReviewCreationForm(request.POST, instance=review)
@@ -59,6 +75,9 @@ def update(request, pk):
 
 
 def delete(request, pk):
-    Review.objects.get(pk=pk).delete()
+    review = Review.objects.get(pk=pk).delete()
+    
+    if request.user.pk != review.user_id:
+        return redirect(request.GET.get('next') or 'reviews:index')
 
     return redirect("reviews:index")

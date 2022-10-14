@@ -9,8 +9,10 @@
     </div>
 
     <div>
-      <a class = 'btn btn-primary' href="{% url 'reviews:update' review.pk %}">수정</a>
-      <a class = 'btn btn-danger' href="{% url 'reviews:delete' review.pk %}">삭제</a>
+      {% if request.user.pk == review.user_id %}
+        <a class = 'btn btn-primary' href="{% url 'reviews:update' review.pk %}">수정</a>
+        <a class = 'btn btn-danger' href="{% url 'reviews:delete' review.pk %}">삭제</a>
+      {% endif %}
     </div>
   </div>
   <hr>
