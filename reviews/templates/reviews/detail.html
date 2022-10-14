@@ -4,14 +4,20 @@
 
   <div class="d-flex justify-content-between align-items-center">
     <div>
-      <span class="text-muted">{{ review.movie_name }} </span>
-      <span>| {{ review.star }} {{ review.grade }}</span>
+      <span class="text-muted">{{ review.movie_name }}
+      </span>
+      <span>|
+        {{ review.star }}
+        {{ review.grade }}</span>
+      <span>
+        {{review.user }}</span>
+
     </div>
 
     <div>
       {% if request.user.pk == review.user_id %}
-        <a class = 'btn btn-primary' href="{% url 'reviews:update' review.pk %}">수정</a>
-        <a class = 'btn btn-danger' href="{% url 'reviews:delete' review.pk %}">삭제</a>
+        <a class='btn btn-primary' href="{% url 'reviews:update' review.pk %}">수정</a>
+        <a class='btn btn-danger' href="{% url 'reviews:delete' review.pk %}">삭제</a>
       {% endif %}
     </div>
   </div>
@@ -22,7 +28,8 @@
   <hr>
 
   <div class="d-flex flex-column align-items-end">
-    <p class="text-muted mb-3">마지막 수정 시간: {{ review.updated_at|date:'Y-m-d H:i' }}</p>
+    <p class="text-muted mb-3">마지막 수정 시간:
+      {{ review.updated_at|date:'Y-m-d H:i' }}</p>
     <a class="btn btn-primary" href="{% url 'reviews:index' %}">목록으로</a>
   </div>
 {% endblock %}
