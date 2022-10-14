@@ -1,6 +1,24 @@
 {% extends 'base.html' %}
-
 {% block content %}
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">id</th>
+      <th scope="col">username</th>
+      <th scope="col">email</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for user in users  %}
+    <tr>
+      <th scope="row">{{ user.id }}</th>
+      <td>
+        <a href="{% url 'accounts:detail' user.pk %}">{{ user.username }}</a></td>
+      <td>{{ user.email }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
   <a href="{% url 'accounts:signup' %}" class="btn btn-primary mb-3 w-100">회원가입</a>
   <a href="{% url 'accounts:login' %}" class="btn btn-primary mb-3 w-100">로그인</a>
 

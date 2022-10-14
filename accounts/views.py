@@ -1,6 +1,7 @@
+from multiprocessing import context
 from django.shortcuts import render, redirect
 from .forms import CustomUserCreationForm
-from django.contrib.auth.forms import AuthenticationForm    # 로그인
+from django.contrib.auth.forms import AuthenticationForm  # 로그인
 from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth import get_user_model
@@ -9,8 +10,11 @@ from django.contrib.auth import get_user_model
 
 
 def index(request):
-
-    return render(request, "accounts/index.html")
+    users = get_user_model().objects.all()
+    context = {
+        "users": users,
+    }
+    return render(request, "accounts/index.html", context)
 
 
 def signup(request):
@@ -48,5 +52,13 @@ def login(request):
 
 def logout(request):
     auth_logout(request)
-    
+
     return redirect("accounts:index")
+
+
+def detail(request, pk):
+    user = get_user_model().objects.get(pk=pk)
+    context = {
+        "user_": user,
+    }
+    return render(request, "accounts/detail.html", context)
